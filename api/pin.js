@@ -22,6 +22,7 @@ module.exports = async (req, res) => {
     bg_color,
     theme,
     show_owner,
+    show_description,
     cache_seconds,
     locale,
     border_radius,
@@ -74,6 +75,7 @@ module.exports = async (req, res) => {
         border_radius,
         border_color,
         show_owner: parseBoolean(show_owner),
+        show_description: parseBoolean(show_description),
         locale: locale ? locale.toLowerCase() : null,
       }),
     );

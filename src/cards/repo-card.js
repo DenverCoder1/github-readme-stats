@@ -68,8 +68,8 @@ const iconWithLabel = (icon, label, testid) => {
 };
 
 /**
- * @param {import('../fetchers/types').RepositoryData} repo 
- * @param {Partial<import("./types").RepoCardOptions>} options 
+ * @param {import('../fetchers/types').RepositoryData} repo
+ * @param {Partial<import("./types").RepoCardOptions>} options
  * @returns {string}
  */
 const renderRepoCard = (repo, options = {}) => {
@@ -86,6 +86,7 @@ const renderRepoCard = (repo, options = {}) => {
   const {
     hide_border = false,
     show_icons = true,
+    show_description = true,
     title_color,
     icon_color,
     text_color,
@@ -103,14 +104,17 @@ const renderRepoCard = (repo, options = {}) => {
   const langColor = (primaryLanguage && primaryLanguage.color) || "#333";
 
   const desc = parseEmojis(description || "No description provided");
-  const multiLineDescription = wrapTextMultiline(desc);
+  const multiLineDescription = show_description ? wrapTextMultiline(desc) : [];
   const descriptionLines = multiLineDescription.length;
   const descriptionSvg = multiLineDescription
     .map((line) => `<tspan dy="1.2em" x="25">${encodeHTML(line)}</tspan>`)
     .join("");
 
-  const height =
+  let height =
     (descriptionLines > 1 ? 120 : 110) + descriptionLines * lineHeight;
+  if (!show_description) {
+    height -= 25;
+  }
 
   const i18n = new I18n({
     locale,
@@ -169,11 +173,11 @@ const renderRepoCard = (repo, options = {}) => {
   return card.render(`
     ${
       isTemplate
-        // @ts-ignore
-        ? getBadgeSVG(i18n.t("repocard.template"), colors.textColor)
+        ? // @ts-ignore
+          getBadgeSVG(i18n.t("repocard.template"), colors.textColor)
         : isArchived
-        // @ts-ignore
-        ? getBadgeSVG(i18n.t("repocard.archived"), colors.textColor)
+        ? // @ts-ignore
+          getBadgeSVG(i18n.t("repocard.archived"), colors.textColor)
         : ""
     }
 

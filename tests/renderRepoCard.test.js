@@ -85,6 +85,13 @@ describe("Test renderRepoCard", () => {
     );
   });
 
+  it("should hide description", () => {
+    document.body.innerHTML = renderRepoCard(data_repo.repository, {
+      show_description: false,
+    });
+    expect(document.getElementsByClassName("description")[0]).toHaveTextContent("");
+  });
+
   it("should render emojis", () => {
     document.body.innerHTML = renderRepoCard({
       ...data_repo.repository,
