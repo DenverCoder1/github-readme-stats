@@ -3,7 +3,6 @@ const {
   kFormatter,
   encodeHTML,
   renderError,
-  flexLayout,
   getCardColors,
   wrapTextMultiline,
 } = require("../src/common/utils");
@@ -42,26 +41,6 @@ describe("Test utils.js", () => {
     expect(
       queryByTestId(document.body, "message").children[1],
     ).toHaveTextContent(/Secondary Message/gim);
-
-  it("should test FlexLayout", () => {
-    const layout = FlexLayout({
-      items: ["<text>1</text>", "<text>2</text>"],
-      gap: 60,
-    }).join("");
-
-    expect(layout).toBe(
-      `<g transform=\"translate(0, 0)\"><text>1</text></g><g transform=\"translate(60, 0)\"><text>2</text></g>`,
-    );
-
-    const columns = FlexLayout({
-      items: ["<text>1</text>", "<text>2</text>"],
-      gap: 60,
-      direction: "column",
-    }).join("");
-
-    expect(columns).toBe(
-      `<g transform=\"translate(0, 0)\"><text>1</text></g><g transform=\"translate(0, 60)\"><text>2</text></g>`,
-    );
   });
 
   it("getCardColors: should return expected values", () => {
