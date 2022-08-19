@@ -15,7 +15,7 @@ exports[`Test Render Wakatime Card should render correctly 1`] = `
         <desc id=\\"descId\\"></desc>
         <style>
           .header {
-            font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
+            font: 600 17px 'Segoe UI', Ubuntu, Sans-Serif;
             fill: #2f80ed;
             animation: fadeInAnimation 0.8s ease-in-out forwards;
           }
@@ -90,7 +90,7 @@ exports[`Test Render Wakatime Card should render correctly 1`] = `
         
       <g
         data-testid=\\"card-title\\"
-        transform=\\"translate(25, 35)\\"
+        transform=\\"translate(25, 32)\\"
       >
         <g transform=\\"translate(0, 0)\\">
       <text
@@ -105,7 +105,7 @@ exports[`Test Render Wakatime Card should render correctly 1`] = `
 
         <g
           data-testid=\\"main-card-body\\"
-          transform=\\"translate(0, 55)\\"
+          transform=\\"translate(0, 52)\\"
         >
           
     <svg x=\\"0\\" y=\\"0\\" width=\\"100%\\">
@@ -176,7 +176,7 @@ exports[`Test Render Wakatime Card should render correctly with compact layout 1
         <desc id=\\"descId\\"></desc>
         <style>
           .header {
-            font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
+            font: 600 17px 'Segoe UI', Ubuntu, Sans-Serif;
             fill: #2f80ed;
             animation: fadeInAnimation 0.8s ease-in-out forwards;
           }
@@ -251,7 +251,7 @@ exports[`Test Render Wakatime Card should render correctly with compact layout 1
         
       <g
         data-testid=\\"card-title\\"
-        transform=\\"translate(25, 35)\\"
+        transform=\\"translate(25, 32)\\"
       >
         <g transform=\\"translate(0, 0)\\">
       <text
@@ -266,7 +266,7 @@ exports[`Test Render Wakatime Card should render correctly with compact layout 1
 
         <g
           data-testid=\\"main-card-body\\"
-          transform=\\"translate(0, 55)\\"
+          transform=\\"translate(0, 52)\\"
         >
           
     <svg x=\\"0\\" y=\\"0\\" width=\\"100%\\">

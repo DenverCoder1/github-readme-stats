@@ -20,7 +20,7 @@ const { repoCardLocales } = require("../translations");
  * @returns {string}
  */
 const getBadgeSVG = (label, textColor) => `
-  <g data-testid="badge" class="badge" transform="translate(320, -18)">
+  <g data-testid="badge" class="badge" transform="translate(244, -23)">
     <rect stroke="${textColor}" stroke-width="1" width="70" height="20" x="-12" y="-14" ry="10" rx="10"></rect>
     <text
       x="23" y="-5"
