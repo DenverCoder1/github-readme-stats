@@ -1,20 +1,18 @@
 // @ts-check
+
 import { Card } from "../common/Card.js";
+import { getCardColors } from "../common/color.js";
+import { kFormatter, wrapTextMultiline } from "../common/fmt.js";
+import { encodeHTML } from "../common/html.js";
 import { I18n } from "../common/I18n.js";
 import { icons } from "../common/icons.js";
+import { clampValue, parseEmojis, parseBoolean } from "../common/ops.js";
 import {
-  encodeHTML,
   flexLayout,
-  getCardColors,
-  kFormatter,
   measureText,
-  parseEmojis,
-  wrapTextMultiline,
   iconWithLabel,
   createLanguageNode,
-  clampValue,
-  parseBoolean,
-} from "../common/utils.js";
+} from "../common/render.js";
 import { repoCardLocales } from "../translations.js";
 
 const ICON_SIZE = 16;

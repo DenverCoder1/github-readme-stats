@@ -1,13 +1,23 @@
-import {
-  clampValue,
-  CONSTANTS,
-  renderError,
-  parseBoolean,
-} from "../src/common/utils.js";
-import { isLocaleAvailable } from "../src/translations.js";
-import { renderGistCard } from "../src/cards/gist-card.js";
-import { fetchGist } from "../src/fetchers/gist-fetcher.js";
+// @ts-check
 
+import { renderError } from "../src/common/render.js";
+import { isLocaleAvailable } from "../src/translations.js";
+import { renderGistCard } from "../src/cards/gist.js";
+import { fetchGist } from "../src/fetchers/gist.js";
+import {
+  CACHE_TTL,
+  resolveCacheSeconds,
+  setCacheHeaders,
+  setErrorCacheHeaders,
+} from "../src/common/cache.js";
+import { guardAccess } from "../src/common/access.js";
+import {
+  MissingParamError,
+  retrieveSecondaryMessage,
+} from "../src/common/error.js";
+import { parseBoolean } from "../src/common/ops.js";
+
+// @ts-ignore
 export default async (req, res) => {
   const {
     id,
@@ -26,49 +36,48 @@ export default async (req, res) => {
 
   res.setHeader("Content-Type", "image/svg+xml");
 
+  const access = guardAccess({
+    res,
+    id,
+    type: "gist",
+    colors: {
+      title_color,
+      text_color,
+      bg_color,
+      border_color,
+      theme,
+    },
+  });
+  if (!access.isPassed) {
+    return access.result;
+  }
+
   if (locale && !isLocaleAvailable(locale)) {
     return res.send(
-      renderError("Something went wrong", "Language not found", {
-        title_color,
-        text_color,
-        bg_color,
-        border_color,
-        theme,
+      renderError({
+        message: "Something went wrong",
+        secondaryMessage: "Language not found",
+        renderOptions: {
+          title_color,
+          text_color,
+          bg_color,
+          border_color,
+          theme,
+        },
       }),
     );
   }
 
   try {
     const gistData = await fetchGist(id);
+    const cacheSeconds = resolveCacheSeconds({
+      requested: parseInt(cache_seconds, 10),
+      def: CACHE_TTL.GIST_CARD.DEFAULT,
+      min: CACHE_TTL.GIST_CARD.MIN,
+      max: CACHE_TTL.GIST_CARD.MAX,
+    });
 
-    let cacheSeconds = clampValue(
-      parseInt(cache_seconds || CONSTANTS.SIX_HOURS, 10),
-      CONSTANTS.SIX_HOURS,
-      CONSTANTS.ONE_DAY,
-    );
-    cacheSeconds = process.env.CACHE_SECONDS
-      ? parseInt(process.env.CACHE_SECONDS, 10) || cacheSeconds
-      : cacheSeconds;
-
-    /*
-      if star count & fork count is over 1k then we are kFormating the text
-      and if both are zero we are not showing the stats
-      so we can just make the cache longer, since there is no need to frequent updates
-    */
-    const stars = gistData.starsCount;
-    const forks = gistData.forksCount;
-    const isBothOver1K = stars > 1000 && forks > 1000;
-    const isBothUnder1 = stars < 1 && forks < 1;
-    if (!cache_seconds && (isBothOver1K || isBothUnder1)) {
-      cacheSeconds = CONSTANTS.SIX_HOURS;
-    }
-
-    res.setHeader(
-      "Cache-Control",
-      `max-age=${
-        cacheSeconds / 2
-      }, s-maxage=${cacheSeconds}, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
-    );
+    setCacheHeaders(res, cacheSeconds);
 
     return res.send(
       renderGistCard(gistData, {
@@ -85,19 +94,33 @@ export default async (req, res) => {
       }),
     );
   } catch (err) {
-    res.setHeader(
-      "Cache-Control",
-      `max-age=${CONSTANTS.ERROR_CACHE_SECONDS / 2}, s-maxage=${
-        CONSTANTS.ERROR_CACHE_SECONDS
-      }, stale-while-revalidate=${CONSTANTS.ONE_DAY}`,
-    ); // Use lower cache period for errors.
+    setErrorCacheHeaders(res);
+    if (err instanceof Error) {
+      return res.send(
+        renderError({
+          message: err.message,
+          secondaryMessage: retrieveSecondaryMessage(err),
+          renderOptions: {
+            title_color,
+            text_color,
+            bg_color,
+            border_color,
+            theme,
+            show_repo_link: !(err instanceof MissingParamError),
+          },
+        }),
+      );
+    }
     return res.send(
-      renderError(err.message, err.secondaryMessage, {
-        title_color,
-        text_color,
-        bg_color,
-        border_color,
-        theme,
+      renderError({
+        message: "An unknown error occurred",
+        renderOptions: {
+          title_color,
+          text_color,
+          bg_color,
+          border_color,
+          theme,
+        },
       }),
     );
   }

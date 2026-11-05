@@ -10,10 +10,10 @@ jobs:
     if: github.repository == 'anuraghazra/github-readme-stats'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: Deployment Prep
         run: python ./.github/workflows/deploy-prep.py
-      - uses: stefanzweifel/git-auto-commit-action@8621497c8c39c72f3e2a999a26b4ca1b5058a842 # v5.0.1
+      - uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3 # v7.0.0
         with:
           branch: vercel
           create_branch: true

@@ -12,7 +12,7 @@ import Hjson from "hjson";
 import snakeCase from "lodash.snakecase";
 import parse from "parse-diff";
 import { inspect } from "util";
-import { isValidHexColor, isValidGradient } from "../src/common/utils.js";
+import { isValidHexColor, isValidGradient } from "../src/common/color.js";
 import { themes } from "../themes/index.js";
 import { getGithubToken, getRepoInfo } from "./helpers.js";
 
@@ -332,6 +332,9 @@ const parseJSON = (json) => {
       );
     }
   } catch (error) {
+    // Resolve eslint no-unused-vars
+    error;
+
     // Remove trailing commas (if any).
     let parsedJson = json.replace(/(,\s*})/g, "}");
 
